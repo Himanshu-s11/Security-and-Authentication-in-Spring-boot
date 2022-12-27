@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="//www.thymeleaf.org">
+     <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible"> 
+        <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/3.4.1/css/bootstrap.min.css}"/>
+     </head>
+        <body>
+            <div class="container">
+              <div class="col-md-6">
+              <h1>Add Product Item</h1>
+                  <form action="#" th:action="@{/edit/{id}(id=${todo.id})}"
+                    th:object="${todo}" method="POST">
+                  <div class="form-group">
+                  <label for="name">Name</label>
+                  <input class="form-controller" type="text" th:field="*{pName}" id="name" name="name" placeholder="Add Name"><br>
+                  <label for="price">Price</label>
+                  <input class="form-controller" type="text" th:field="*{price}" id="price" name="price" placeholder="Add price"><br>
+                  </div>
+                   <button type="submit" class="btn btn-success">Save</button>
+                  </form>
+              </div>
+               
+            </div>
+        </body>
+     </html>

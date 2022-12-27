@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="//www.thymeleaf.org"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible">
+<link th:rel="stylesheet"
+	th:href="@{/webjars/bootstrap/3.4.1/css/bootstrap.min.css}" />
+	<script src="" th:src="@{/js/comm.js}"></script>
+	
+</head>
+<body>
+	<div class="container">
+
+		<div align="center">
+			<div sec:authorize="isAuthenticated()">
+				Welcome <b><span sec:authentication="name">User Name</span></b>
+				&nbsp; <span sec:authentication="principal.authorities">Role</span>
+			</div>
+			<div align="right">
+				<form action="#" th:action="@{/logout}" method="POST"  name="logoutForm">
+					<input type="submit" value="logout" />
+				</form>
+				<a href="" id="logoutlink">Logout</a>
+			</div>
+		</div>
+		<h1 class="text-center">Product List
+			[[${#httpServletRequest.remoteUser}]]</h1>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Category</th>
+					<th>Price</th>
+					<th sec:authorize="hasAnyAuthority('ADMIN','EDITOR')">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="items : ${Product}">
+
+					<td th:text="${items.id}">item_id</td>
+					<td th:text="${items.pName}">Name</td>
+					<td th:text="${items.category}">Category</td>
+					<td th:text="${items.price}">Price</td>
+					<td sec:authorize="hasAnyAuthority('ADMIN','EDITOR')">
+						<div class="btn btn-group-sm" role="group">
+
+							<a class="btn btn-info" th:href="@{/edit/{id}(id=${items.id})}">Edit</a>
+							<a sec:authorize="hasAuthority('ADMIN')" class="btn btn-danger"
+								th:href="@{/delete/{id}(id=${items.id})}">Delete</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<p>
+			<a class="btn btn-success" href="/addProduct">Add Product</a>
+		</p>
+	</div>
+
+	<script th:href="@{/webjars/jquery/3.6.0/jquery.min.js} "></script>
+	<script th:href="@{/webjars/bootstrap/3.4.1/bootstrap.min.js} "></script>
+
+</body>
+</html>
