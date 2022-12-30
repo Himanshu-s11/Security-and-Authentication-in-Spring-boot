@@ -60,28 +60,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		   // .antMatchers("/").permitAll() to permit view access to all but need login for action as mentioned below
+	//	   .antMatchers("/").permitAll() to permit view access to all but need login for action as mentioned below
 		    .antMatchers("/delete/**").hasAuthority("ADMIN")//for role based login
 		    .antMatchers("/edit/**").hasAnyAuthority("ADMIN","EDITOR")
+		   // .antMatchers("/login").permitAll()
 		    .anyRequest().authenticated()
 		    .and()
 		    .formLogin()
 		      .permitAll()
 		      .loginPage("/login")
+		      .failureHandler(customeLoginFailer)
+		      .successHandler(customLoginSuccessHandeler)
 		      .usernameParameter("email")
-		      .defaultSuccessUrl("/login_success")
+		     // .defaultSuccessUrl("/login_success")
 		      //.failureUrl("/")
 		     // .successForwardUrl("/login_success_handeler")
 		      //.failureForwardUrl(null)
-		      .successHandler(new AuthenticationSuccessHandler() {
-				
-				@Override
-				public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-						Authentication authentication) throws IOException, ServletException {
-					response.sendRedirect("/");
-					
-				}
-			})
+//		      .successHandler(new AuthenticationSuccessHandler() {
+//				
+//				@Override
+//				public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+//						Authentication authentication) throws IOException, ServletException {
+//					response.sendRedirect("/");
+//					
+//				}
+//			})
 		    .and()
 		    .logout().permitAll()
 		    .and()
@@ -98,5 +101,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		return jdbcTokenRepositoryImpl;
 	}
 	
+	@Autowired
+	private CustomeLoginFailer customeLoginFailer;
+	
+	@Autowired
+	private CustomLoginSuccessHandeler customLoginSuccessHandeler;
 	
 }
