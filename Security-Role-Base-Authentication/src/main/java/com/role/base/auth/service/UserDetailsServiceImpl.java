@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.role.base.auth.entity.MyUserDetails;
 import com.role.base.auth.entity.User;
+import com.role.base.auth.exception.UserExceptionNotFoundException;
 import com.role.base.auth.repository.UserRepo;
 
 @Service
@@ -68,5 +70,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 	}
 	
+	public void udateResetPassword(String tocken,String userName) throws UserExceptionNotFoundException {
+		User user= repo.getUserByUserName(userName);
+		if(user!=null) {
+			user.setResetPasswordTocken(tocken);
+			repo.save(user);
+		}else {
+			throw new UserExceptionNotFoundException("user not found");
+		}
+	}
+	
+	public User get(String resetPasswordTocken) {
+		return repo.findByResetPasswordTocken(resetPasswordTocken);
+	}
 
+	public void updatePassword(User user, String newPassword) {
+		BCryptPasswordEncoder bCryptPasswordEncoder= new BCryptPasswordEncoder();
+		String encodePassword=bCryptPasswordEncoder.encode(newPassword);
+		user.setPassword(encodePassword);
+		user.setResetPasswordTocken(null);
+		
+		repo.save(user);
+	}
 }

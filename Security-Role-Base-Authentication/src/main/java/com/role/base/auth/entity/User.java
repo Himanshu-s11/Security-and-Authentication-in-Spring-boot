@@ -41,5 +41,8 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name="roles_id")
 			)
 	private Set<Role> role = new HashSet<>();
+	
+	@Column(name="reset_password_tocken")
+	private String resetPasswordTocken;
 
 }

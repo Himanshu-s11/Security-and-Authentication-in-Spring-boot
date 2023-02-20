@@ -18,4 +18,6 @@ public interface UserRepo extends CrudRepository<User,Integer>{
    @Query("UPDATE User u Set u.failedAttemp=?1 where u.userName=?2")
    @Modifying
    public void updateFailedAttemp(Integer failedAttemp, String userName);
+   
+   public User findByResetPasswordTocken(String tocken); 
 }
